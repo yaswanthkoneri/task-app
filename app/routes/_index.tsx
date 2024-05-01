@@ -30,35 +30,43 @@ export default function Index() {
   const navigate = useNavigate();
 
   return (
-
-    <body>
-      <div className="card-container">
-        <div className="card">
-          <Form id="task-form" method="post">
-            <p>
-              <span>Username</span>
+    <body className="bg-gray-100 flex items-center justify-center h-screen">
+      <div className="max-w-sm w-full rounded overflow-hidden shadow-lg bg-white">
+        <div className="px-6 py-4">
+          <h2 className="text-center font-bold mb-4">Login</h2>
+          <Form id="login-form" method="post">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                Username
+              </label>
               <input
-                aria-label="username"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="username"
                 name="username"
                 type="text"
                 placeholder="Username"
               />
-            </p>
-            <p>
-              <span>Password</span>
+            </div>
+            <div className="mb-6">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                Password
+              </label>
               <input
-                aria-label="password"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
                 name="password"
                 type="password"
-                placeholder="password"
+                placeholder="Password"
               />
-            </p>
-            <p>
-              <button type="submit">Login</button>
-              <button onClick={() => navigate(-1)} type="button">
-                Cancel
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Login
               </button>
-            </p>
+            </div>
           </Form>
         </div>
       </div>
