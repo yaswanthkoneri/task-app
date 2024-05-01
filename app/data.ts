@@ -19,7 +19,11 @@ type ContactMutation = {
 
 export type ContactRecord = ContactMutation & {
   id: string;
-  createdAt: string;
+  name: string;
+  completed: boolean;
+  description: string;
+  created_at: string;
+  updated_at: string;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,12 +56,7 @@ const fakeContacts = {
     const updatedContact = { ...contact, ...values };
     fakeContacts.records[id] = updatedContact;
     return updatedContact;
-  },
-
-  destroy(id: string): null {
-    delete fakeContacts.records[id];
-    return null;
-  },
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,20 +78,36 @@ export async function createEmptyContact() {
 }
 
 export async function getContact(id: string) {
-  return fakeContacts.get(id);
+  const response = await fetch(`http://localhost:8000/tasks/${id}`);
+  const data = await response.json();
+  return data;
 }
 
 export async function updateContact(id: string, updates: ContactMutation) {
-  const contact = await fakeContacts.get(id);
-  if (!contact) {
-    throw new Error(`No contact found for ${id}`);
-  }
-  await fakeContacts.set(id, { ...contact, ...updates });
-  return contact;
+  // const contact = await fakeContacts.get(id);
+  // if (!contact) {
+  //   throw new Error(`No contact found for ${id}`);
+  // }
+  // await fakeContacts.set(id, { ...contact, ...updates });
+  // return contact;
+
+
+  const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updates)
+  });
+  const data = await response.json();
+  return data;
 }
 
 export async function deleteContact(id: string) {
-  fakeContacts.destroy(id);
+  let response = await fetch(`http://localhost:8000/tasks/${id}`, {
+    method: 'DELETE'
+  });
+    return response;
 }
 
 [

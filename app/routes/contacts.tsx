@@ -19,8 +19,8 @@ import appStylesHref from "../app.css";
 import { createEmptyContact, getContacts } from "../data";
 
 export const action = async () => {
-    const contact = await createEmptyContact();
-    return redirect(`/${contact.id}/edit`);
+    // const contact = await createEmptyContact();
+    return redirect(`/contacts/new`);
 };
 
 export const links: LinksFunction = () => [
@@ -31,7 +31,6 @@ export const loader = async ({ request }: LoaderArgs) => {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
     const contacts = await getContacts(q);
-    console.log(contacts)
     return json({ contacts, q });
 };
 

@@ -29,34 +29,26 @@ export default function Contact() {
   return (
     <div id="contact">
       <div>
-        <img
-          alt={`${contact.first} ${contact.last} avatar`}
-          key={contact.avatar}
-          src={contact.avatar}
-        />
-      </div>
-
-      <div>
         <h1>
-          {contact.first || contact.last ? (
+          {contact.name ? (
             <>
-              {contact.first} {contact.last}
+              {contact.name}
             </>
           ) : (
             <i>No Name</i>
           )}{" "}
-          <Favorite contact={contact} />
+          {/* <Favorite contact={contact} /> */}
         </h1>
 
-        {contact.twitter ? (
+        {/* {contact.twitter ? (
           <p>
             <a href={`https://twitter.com/${contact.twitter}`}>
               {contact.twitter}
             </a>
           </p>
-        ) : null}
+        ) : null} */}
 
-        {contact.notes ? <p>{contact.notes}</p> : null}
+        {contact.description ? <p>{contact.description}</p> : null}
 
         <div>
           <Form action="edit">
@@ -80,24 +72,5 @@ export default function Contact() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
-  const fetcher = useFetcher();
-  const favorite = fetcher.formData
-    ? fetcher.formData.get("favorite") === "true"
-    : contact.favorite;
-
-  return (
-    <fetcher.Form method="post">
-      <button
-        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
-        name="favorite"
-        value={favorite ? "false" : "true"}
-      >
-        {favorite ? "★" : "☆"}
-      </button>
-    </fetcher.Form>
   );
 }
