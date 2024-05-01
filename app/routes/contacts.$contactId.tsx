@@ -26,6 +26,7 @@ export default function Contact() {
           {contact.name ? (
             <>
               {contact.name}
+              {contact.completed && "✅"}
             </>
           ) : (
             <i>No Name</i>

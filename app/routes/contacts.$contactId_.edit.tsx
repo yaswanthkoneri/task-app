@@ -46,6 +46,15 @@ export default function EditContact() {
         <textarea defaultValue={contact.description} name="description" rows={6} />
       </label>
       <p>
+        <span>Completed</span>
+        <input
+          defaultValue={contact.completed}
+          aria-label="completed"
+          name="completed"
+          type="checkbox"
+        />
+      </p>
+      <p>
         <button type="submit">Save</button>
         <button onClick={() => navigate(-1)} type="button">
           Cancel

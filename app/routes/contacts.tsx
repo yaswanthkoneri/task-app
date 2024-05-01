@@ -64,10 +64,13 @@ export default function Contacts() {
             </head>
             <body>
                 <div id="sidebar">
-                    <form method="post" action="/logout">
-                        <button>Logout</button>
-                    </form>
-                    <h1>Remix Tasks</h1>
+                    <h1>Remix Tasks
+                        <span>
+                            <form method="post" action="/logout">
+                                <button>Logout</button>
+                            </form>
+                        </span>
+                    </h1>
                     <div>
                         <Form
                             id="search-form"
@@ -106,6 +109,7 @@ export default function Contacts() {
                                             {contact.name ? (
                                                 <>
                                                     {contact.name}
+                                                    {contact.completed && "✅"}
                                                 </>
                                             ) : (
                                                 <i>No Name</i>

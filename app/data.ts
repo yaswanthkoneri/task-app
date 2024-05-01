@@ -1,9 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-// 🛑 Nothing in here has anything to do with Remix, it's just a fake database
-////////////////////////////////////////////////////////////////////////////////
-
-import { matchSorter } from "match-sorter";
-// @ts-ignore - no types, but it's a tiny function
 import sortBy from "sort-by";
 import invariant from "tiny-invariant";
 import { sessionIdSessionStorage } from "./session.server";
