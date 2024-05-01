@@ -1,19 +1,9 @@
-import type { LinksFunction, LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
 import {
-  Form,
   Links,
   LiveReload,
   Meta,
-  NavLink,
   Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
 } from "@remix-run/react";
-import { useEffect } from "react";
 
 export default function App() {
 

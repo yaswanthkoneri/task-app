@@ -16,7 +16,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
 
     // Redirect to the login page or any other desired destination
-    return redirect('/login', {
+    return redirect('/', {
         headers: {
             'Set-Cookie': serializedSession,
         },

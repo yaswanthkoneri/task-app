@@ -37,7 +37,7 @@ export default function EditContact() {
   };
 
   return (
-    <Form id="contact-form" method="post">
+    <Form id="task-form" method="post">
       <p>
         <span>Name</span>
         <input

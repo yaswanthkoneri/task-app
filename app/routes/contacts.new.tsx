@@ -27,7 +27,7 @@ export default function EditContact() {
     const navigate = useNavigate();
 
     return (
-        <Form id="contact-form" method="post">
+        <Form id="task-form" method="post">
             <p>
                 <span>Name</span>
                 <input

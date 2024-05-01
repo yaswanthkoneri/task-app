@@ -34,7 +34,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     const token = await getJWTToken(request)
     const contacts = await getContacts(q, token);
     if (contacts === 401) {
-        return redirect('/login')
+        return redirect('/')
     }
     return json({ contacts, q });
 };
