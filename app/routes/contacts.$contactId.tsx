@@ -4,12 +4,12 @@ import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import type { TaskRecord } from "../data";
-import { getContact, getJWTToken, updateContact } from "../data";
+import { getTask, getJWTToken, updateTask } from "../data";
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(params.contactId, "Missing contactId param");
   const token = await getJWTToken(request)
-  const contact = await getContact(params.contactId, token);
+  const contact = await getTask(params.contactId, token);
   if (!contact) {
     throw new Response("Not Found", { status: 404 });
   }

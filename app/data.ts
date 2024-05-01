@@ -69,7 +69,7 @@ export const setSession = async (request: any, jwtToken: string) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Handful of helper functions to be called from route loaders and actions
-export async function getContacts(query?: string | null, token?: string) {
+export async function getTasks(query?: string | null, token?: string) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     let contacts
@@ -92,7 +92,7 @@ export async function getContacts(query?: string | null, token?: string) {
 
 }
 
-export async function getContact(id: string, token: string) {
+export async function getTask(id: string, token: string) {
   const response = await fetch(`${BASE_URL}/tasks/${id}`, {
     headers: {
       'Authorization': `Bearer ${token}`
@@ -102,7 +102,7 @@ export async function getContact(id: string, token: string) {
   return data;
 }
 
-export async function updateContact(id: string, updates: TaskMutation, token: string) {
+export async function updateTask(id: string, updates: TaskMutation, token: string) {
  
 
 
@@ -118,7 +118,7 @@ export async function updateContact(id: string, updates: TaskMutation, token: st
   return data;
 }
 
-export async function createContact(updates: TaskMutation, token: string) {
+export async function createTask(updates: TaskMutation, token: string) {
   try {
     const response = await fetch(`${BASE_URL}/tasks/list/`, {
       method: 'POST',
@@ -156,7 +156,7 @@ export async function login(body: TaskMutation) {
  
  
 }
-export async function deleteContact(id: string, token: string) {
+export async function deleteTask(id: string, token: string) {
   let response = await fetch(`${BASE_URL}/tasks/${id}`, {
     method: 'DELETE',
     headers: {

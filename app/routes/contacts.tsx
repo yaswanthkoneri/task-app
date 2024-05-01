@@ -16,7 +16,7 @@ import {
 import { useEffect } from "react";
 
 import appStylesHref from "../app.css";
-import { createEmptyContact, getContacts, getJWTToken } from "../data";
+import { getTasks, getJWTToken } from "../data";
 import { sessionIdSessionStorage } from "~/session.server";
 
 export const action = async () => {
@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderArgs) => {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
     const token = await getJWTToken(request)
-    const contacts = await getContacts(q, token);
+    const contacts = await getTasks(q, token);
     if (contacts === 401) {
         return redirect('/')
     }

@@ -3,19 +3,19 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { getContact, createContact, getJWTToken } from "../data";
+import { getTask, createTask, getJWTToken } from "../data";
 
 export const action = async ({ request }: ActionArgs) => {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
     const token = await getJWTToken(request)
-    let result = await createContact(updates, token);
+    let result = await createTask(updates, token);
     return redirect(`/contacts/${result.id}`);
 };
 
 export const loader = async ({ params }: LoaderArgs) => {
     // invariant(params.contactId, "Missing contactId param");
-    // const contact = await getContact(params.contactId);
+    // const contact = await getTask(params.contactId);
     // if (!contact) {
     //     throw new Response("Not Found", { status: 404 });
     // }
