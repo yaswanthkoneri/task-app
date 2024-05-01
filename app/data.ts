@@ -73,18 +73,39 @@ export const getJWTToken = async (request: any) => {
   return jwtToken;
 }
 
+export const setSession = async (request: any, jwtToken: string) => {
+  const sessionIdSession = await sessionIdSessionStorage.getSession(request.headers.get('Cookie'));
+  sessionIdSession.set('jwtToken', jwtToken);
+  const serializedSession = await sessionIdSessionStorage.commitSession(sessionIdSession, {
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+  });
+  return serializedSession
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Handful of helper functions to be called from route loaders and actions
 export async function getContacts(query?: string | null, token?: string) {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  let contacts
-  if (query) {
-    contacts = await fakeContacts.getAllSearch(query, token);
-    return contacts
-  }
-  contacts = await fakeContacts.getAll(token);
+  try {
+    let contacts
+    if (query) {
+      contacts = await fakeContacts.getAllSearch(query, token);
+      return contacts || []
+    }
+    contacts = await fakeContacts.getAll(token) || [];
 
-  return contacts.sort(sortBy("name", "created_at"));
+    // console.log("contacts", contacts)
+    if (contacts.code === 'token_not_valid') {
+      return 401
+    }
+  
+    return contacts?.sort(sortBy("name", "created_at"));
+  } catch (err) {
+    console.error(err)
+    return err
+  }
+
 }
 
 export async function getContact(id: string, token: string) {

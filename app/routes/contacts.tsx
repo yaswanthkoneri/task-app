@@ -33,6 +33,9 @@ export const loader = async ({ request }: LoaderArgs) => {
     const q = url.searchParams.get("q");
     const token = await getJWTToken(request)
     const contacts = await getContacts(q, token);
+    if (contacts === 401) {
+        return redirect('/login')
+    }
     return json({ contacts, q });
 };
 
@@ -61,6 +64,9 @@ export default function Contacts() {
             </head>
             <body>
                 <div id="sidebar">
+                    <form method="post" action="/logout">
+                        <button>Logout</button>
+                    </form>
                     <h1>Remix Tasks</h1>
                     <div>
                         <Form
@@ -87,7 +93,7 @@ export default function Contacts() {
                         </Form>
                     </div>
                     <nav>
-                        {contacts.length ? (
+                        {contacts?.length ? (
                             <ul>
                                 {contacts.map((contact) => (
                                     <li key={contact.id}>

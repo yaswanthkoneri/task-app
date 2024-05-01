@@ -7,7 +7,7 @@ import {
 } from "@remix-run/react";
 
 import appStylesHref from "../app.css";
-import { login } from "~/data";
+import { login, setSession } from "~/data";
 import { sessionIdSessionStorage } from '~/session.server';
 export const links: LinksFunction = () => [
     { rel: "stylesheet", href: appStylesHref },
@@ -29,14 +29,7 @@ export const action: ActionFunction = async ({ request }) => {
     const updates = Object.fromEntries(formData);
     let result = await login(updates);
     const jwtToken = result.access
-    console.log("jwtToken", result)
-    const sessionIdSession = await sessionIdSessionStorage.getSession(request.headers.get('Cookie'));
-    sessionIdSession.set('jwtToken', jwtToken);
-
-    const serializedSession = await sessionIdSessionStorage.commitSession(sessionIdSession, {
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-    });
+    let serializedSession = await setSession(request, jwtToken);
 
     return redirect('/contacts', {
         headers: {
