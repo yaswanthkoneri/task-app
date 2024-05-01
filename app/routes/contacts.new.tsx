@@ -31,7 +31,6 @@ export default function EditContact() {
             <p>
                 <span>Name</span>
                 <input
-                    defaultValue={contact?.name}
                     aria-label="name"
                     name="name"
                     type="text"
@@ -40,8 +39,17 @@ export default function EditContact() {
             </p>
             <label>
                 <span>Description</span>
-                <textarea defaultValue={contact?.description} name="description" rows={6} />
+                <textarea
+                    name="description" rows={6} />
             </label>
+            <p>
+                <input
+                    aria-label="completed"
+                    name="completed"
+                    type="checkbox"
+                />
+                <span>Completed</span>
+            </p>
             <p>
                 <button type="submit">Save</button>
                 <button onClick={() => navigate(-1)} type="button">

@@ -4,12 +4,14 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getContact, getJWTToken, updateContact } from "../data";
+import { useState } from "react";
 
 export const action = async ({ params, request }: ActionArgs) => {
   invariant(params.contactId, "Missing contactId param");
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
-  // console.log(updates, params.contactId)
+  const completed = formData.get("completed") === "on";
+  const updates = { ...Object.fromEntries(formData), completed: completed };
+  console.log(updates, params.contactId)
   const token = await getJWTToken(request)
   await updateContact(params.contactId, updates, token);
   return redirect(`/contacts/${params.contactId}`);
@@ -28,6 +30,11 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 export default function EditContact() {
   const { contact } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const [completed, setCompleted] = useState(contact.completed);
+
+  const handleCheckboxChange = (event: any) => {
+    setCompleted(event.target.checked);
+  };
 
   return (
     <Form id="contact-form" method="post">
@@ -45,15 +52,16 @@ export default function EditContact() {
         <span>Description</span>
         <textarea defaultValue={contact.description} name="description" rows={6} />
       </label>
-      <p>
-        <span>Completed</span>
+      <label>
         <input
-          defaultValue={contact.completed}
-          aria-label="completed"
+          style={{ flexGrow: 0 }}
+          checked={completed}
           name="completed"
           type="checkbox"
+          onChange={handleCheckboxChange}
         />
-      </p>
+        Completed
+      </label>
       <p>
         <button type="submit">Save</button>
         <button onClick={() => navigate(-1)} type="button">

@@ -28,7 +28,7 @@ body {
   color: #121212;
 }
 textarea,
-input,
+input:not([type="checkbox"]),
 button {
   font-size: 1rem;
   font-family: inherit;
@@ -48,7 +48,7 @@ button {
 }
 
 textarea:hover,
-input:hover,
+input:hover:not([type="checkbox"]),
 button:hover {
   box-shadow:
     0 0px 1px hsla(0, 0%, 0%, 0.6),
