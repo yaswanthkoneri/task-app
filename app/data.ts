@@ -12,7 +12,7 @@ type TaskMutation = {
   updated_at?: string;
 };
 
-export type ContactRecord = TaskMutation & {
+export type TaskRecord = TaskMutation & {
   id: string;
   name: string;
   completed: boolean;
@@ -25,9 +25,9 @@ export type ContactRecord = TaskMutation & {
 // This is just a fake DB table. In a real app you'd be talking to a real db or
 // fetching from an existing API.
 const fakeContacts = {
-  records: {} as Record<string, ContactRecord>,
+  records: {} as Record<string, TaskRecord>,
 
-  async getAll(token: string): Promise<ContactRecord[]> {
+  async getAll(token: string): Promise<TaskRecord[]> {
     const response = await fetch(`${BASE_URL}/tasks/list`, {
       headers: {
       'Authorization': `Bearer ${token}`
@@ -37,7 +37,7 @@ const fakeContacts = {
     return data;
   },
 
-  async getAllSearch(query: string, token:string): Promise<ContactRecord[]> {
+  async getAllSearch(query: string, token:string): Promise<TaskRecord[]> {
     const response = await fetch(`${BASE_URL}/tasks/list?q=${query}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -47,11 +47,11 @@ const fakeContacts = {
     return data;
   },
 
-  async get(id: string): Promise<ContactRecord | null> {
+  async get(id: string): Promise<TaskRecord | null> {
     return fakeContacts.records[id] || null;
   },
 
-  async set(id: string, values: TaskMutation): Promise<ContactRecord> {
+  async set(id: string, values: TaskMutation): Promise<TaskRecord> {
     const contact = await fakeContacts.get(id);
     invariant(contact, `No contact found for ${id}`);
     const updatedContact = { ...contact, ...values };

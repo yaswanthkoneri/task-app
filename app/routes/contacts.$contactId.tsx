@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import type { ContactRecord } from "../data";
+import type { TaskRecord } from "../data";
 import { getContact, getJWTToken, updateContact } from "../data";
 
 export const loader = async ({ request, params }: LoaderArgs) => {
