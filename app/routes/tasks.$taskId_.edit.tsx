@@ -38,7 +38,7 @@ export default function Edittask() {
   return (
     <Form id="task-form" method="post">
       <p>
-        <span>Task Name</span>
+        <span className="font-bold">Task Name</span>
         <input
           defaultValue={task.name}
           aria-label="name"
@@ -48,18 +48,19 @@ export default function Edittask() {
         />
       </p>
       <label>
-        <span>Description</span>
+        <span className="font-bold">Description</span>
         <textarea defaultValue={task.description} placeholder="Description" name="description" rows={6} />
       </label>
-      <label>
+      <label className="font-bold flex items-center">
+        <span>Completed</span>
         <input
+          className="w-5 h-5 grow-0"
           style={{ flexGrow: 0 }}
           checked={completed}
           name="completed"
           type="checkbox"
           onChange={handleCheckboxChange}
         />
-        Completed
       </label>
       <p>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>

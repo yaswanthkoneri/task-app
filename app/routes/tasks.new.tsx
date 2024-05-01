@@ -17,7 +17,7 @@ export default function CreateTask() {
     return (
         <Form id="task-form" method="post">
             <p>
-                <span>Task Name</span>
+                <span className="font-bold">Task Name</span>
                 <input
                     aria-label="name"
                     name="name"
@@ -26,17 +26,18 @@ export default function CreateTask() {
                 />
             </p>
             <label>
-                <span>Description</span>
+                <span className="font-bold">Description</span>
                 <textarea
                     name="description" rows={6} placeholder="Description" />
             </label>
-            <p>
+            <p className="flex items-center">
+                <span className="font-bold">Completed</span>
                 <input
+                    className="ml-10 w-5 h-5"
                     aria-label="completed"
                     name="completed"
                     type="checkbox"
                 />
-                <span>Completed</span>
             </p>
             <p>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>
