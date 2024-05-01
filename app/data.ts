@@ -1,6 +1,7 @@
 import sortBy from "sort-by";
 import invariant from "tiny-invariant";
 import { sessionIdSessionStorage } from "./session.server";
+const BASE_URL = 'http://localhost:8000'
 
 type ContactMutation = {
   id?: string;
@@ -28,7 +29,7 @@ const fakeContacts = {
   records: {} as Record<string, ContactRecord>,
 
   async getAll(token: string): Promise<ContactRecord[]> {
-    const response = await fetch('http://localhost:8000/tasks/list', {
+    const response = await fetch(`${BASE_URL}/tasks/list`, {
       headers: {
       'Authorization': `Bearer ${token}`
       }
@@ -38,7 +39,7 @@ const fakeContacts = {
   },
 
   async getAllSearch(query: string, token:string): Promise<ContactRecord[]> {
-    const response = await fetch(`http://localhost:8000/tasks/list?q=${query}`, {
+    const response = await fetch(`${BASE_URL}/tasks/list?q=${query}`, {
       headers: {
         'Authorization': `Bearer ${token}`
         }
@@ -103,7 +104,7 @@ export async function getContacts(query?: string | null, token?: string) {
 }
 
 export async function getContact(id: string, token: string) {
-  const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -121,7 +122,7 @@ export async function updateContact(id: string, updates: ContactMutation, token:
   // return contact;
 
 
-  const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -135,7 +136,7 @@ export async function updateContact(id: string, updates: ContactMutation, token:
 
 export async function createContact(updates: ContactMutation, token: string) {
   try {
-    const response = await fetch(`http://localhost:8000/tasks/list/`, {
+    const response = await fetch(`${BASE_URL}/tasks/list/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -155,7 +156,7 @@ export async function createContact(updates: ContactMutation, token: string) {
 
 export async function login(body: ContactMutation) {
   try {
-    const response = await fetch(`http://localhost:8000/api/token/`, {
+    const response = await fetch(`${BASE_URL}/api/token/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -172,7 +173,7 @@ export async function login(body: ContactMutation) {
  
 }
 export async function deleteContact(id: string, token: string) {
-  let response = await fetch(`http://localhost:8000/tasks/${id}`, {
+  let response = await fetch(`${BASE_URL}/tasks/${id}`, {
     method: 'DELETE',
     headers: {
         'Authorization': `Bearer ${token}`
