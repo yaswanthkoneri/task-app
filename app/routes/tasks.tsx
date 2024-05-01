@@ -66,7 +66,7 @@ export default function tasks() {
                     <h1>Remix Tasks
                         <span>
                             <form method="post" action="/logout">
-                                <button>Logout</button>
+                                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
                             </form>
                         </span>
                     </h1>
@@ -91,7 +91,7 @@ export default function tasks() {
                             <div aria-hidden hidden={!searching} id="search-spinner" />
                         </Form>
                         <Form method="post">
-                            <button type="submit">New</button>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">New</button>
                         </Form>
                     </div>
                     <nav>

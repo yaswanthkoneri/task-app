@@ -38,18 +38,18 @@ export default function Edittask() {
   return (
     <Form id="task-form" method="post">
       <p>
-        <span>Name</span>
+        <span>Task Name</span>
         <input
           defaultValue={task.name}
           aria-label="name"
           name="name"
           type="text"
-          placeholder="First"
+          placeholder="Task Name"
         />
       </p>
       <label>
         <span>Description</span>
-        <textarea defaultValue={task.description} name="description" rows={6} />
+        <textarea defaultValue={task.description} placeholder="Description" name="description" rows={6} />
       </label>
       <label>
         <input
@@ -62,7 +62,7 @@ export default function Edittask() {
         Completed
       </label>
       <p>
-        <button type="submit">Save</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>
         <button onClick={() => navigate(-1)} type="button">
           Cancel
         </button>

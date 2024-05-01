@@ -17,18 +17,18 @@ export default function CreateTask() {
     return (
         <Form id="task-form" method="post">
             <p>
-                <span>Name</span>
+                <span>Task Name</span>
                 <input
                     aria-label="name"
                     name="name"
                     type="text"
-                    placeholder="First"
+                    placeholder="Task Name"
                 />
             </p>
             <label>
                 <span>Description</span>
                 <textarea
-                    name="description" rows={6} />
+                    name="description" rows={6} placeholder="Description" />
             </label>
             <p>
                 <input
@@ -39,7 +39,7 @@ export default function CreateTask() {
                 <span>Completed</span>
             </p>
             <p>
-                <button type="submit">Save</button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Save</button>
                 <button onClick={() => navigate(-1)} type="button">
                     Cancel
                 </button>

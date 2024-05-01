@@ -2,6 +2,7 @@ import type { LinksFunction, ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import {
   Form,
+  useActionData,
   useNavigate,
 } from "@remix-run/react";
 
@@ -11,8 +12,36 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
 ];
 
+// Validation function for username
+function validateUsername(username: string) {
+  if (!username) {
+    return "Username is required";
+  }
+}
+
+// Validation function for password
+function validatePassword(password: string) {
+  if (!password) {
+    return "Password is required";
+  }
+}
+
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
+  const username = formData.get("username") as string;
+  const password = formData.get("password") as string;
+  const fieldErrors = {
+    password: validatePassword(password),
+    username: validateUsername(username),
+  };
+  const fields = { password, username };
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return {
+      fieldErrors,
+      fields,
+      formError: "Invalid username or password",
+    };
+  }
   const updates = Object.fromEntries(formData);
   let result = await login(updates);
   const jwtToken = result.access
@@ -28,6 +57,8 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Index() {
   const navigate = useNavigate();
+  const actionData = useActionData<typeof action>();
+  console.log(actionData)
 
   return (
     <body className="bg-gray-100 flex items-center justify-center h-screen">
@@ -45,7 +76,21 @@ export default function Index() {
                 name="username"
                 type="text"
                 placeholder="Username"
+                defaultValue={actionData?.fields?.username}
+                aria-invalid={Boolean(actionData?.fieldErrors?.username)}
+                aria-errormessage={
+                  actionData?.fieldErrors?.username ? "username-error" : undefined
+                }
               />
+              {actionData?.fieldErrors?.username ? (
+                <p
+                  className="form-validation-error text-red-500"
+                  role="alert"
+                  id="username-error"
+                >
+                  {actionData.fieldErrors.username}
+                </p>
+              ) : null}
             </div>
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
@@ -57,7 +102,21 @@ export default function Index() {
                 name="password"
                 type="password"
                 placeholder="Password"
+                defaultValue={actionData?.fields?.password}
+                aria-invalid={Boolean(actionData?.fieldErrors?.password)}
+                aria-errormessage={
+                  actionData?.fieldErrors?.password ? "password-error" : undefined
+                }
               />
+              {actionData?.fieldErrors?.password ? (
+                <p
+                  className="form-validation-error text-red-500"
+                  role="alert"
+                  id="password-error"
+                >
+                  {actionData.fieldErrors.password}
+                </p>
+              ) : null}
             </div>
             <div className="flex justify-center">
               <button
