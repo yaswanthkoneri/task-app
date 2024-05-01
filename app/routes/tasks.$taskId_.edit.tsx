@@ -1,14 +1,40 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useNavigate } from "@remix-run/react";
+import { Form, useActionData, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getTask, getJWTToken, updateTask } from "../data";
 import { useState } from "react";
 
+function validateTaskName(name: string) {
+  if (!name) {
+    return "Task Name is required";
+  }
+}
+function validateTask(name: string, description: string) {
+  if (name === description) {
+    return "Task Name and Description both cannot be same";
+  }
+}
+
 export const action = async ({ params, request }: ActionArgs) => {
   invariant(params.taskId, "Missing taskId param");
   const formData = await request.formData();
+
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const fieldErrors = {
+    name: validateTaskName(name),
+    description: validateTask(name, description),
+  };
+  const fields = { name, description };
+  if (Object.values(fieldErrors).some(Boolean)) {
+    return {
+      fieldErrors,
+      fields,
+      formError: null,
+    };
+  }
   const completed = formData.get("completed") === "on";
   const updates = { ...Object.fromEntries(formData), completed: completed };
   const token = await getJWTToken(request)
@@ -28,6 +54,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
 export default function Edittask() {
   const { task } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
   const [completed, setCompleted] = useState(task.completed);
 
@@ -45,11 +72,38 @@ export default function Edittask() {
           name="name"
           type="text"
           placeholder="Task Name"
+          aria-invalid={Boolean(actionData?.fieldErrors?.name)}
+          aria-errormessage={
+            actionData?.fieldErrors?.name ? "name-error" : undefined
+          }
         />
+        {actionData?.fieldErrors?.name ? (
+          <p
+            className="form-validation-error text-red-500"
+            role="alert"
+            id="name-error"
+          >
+            {actionData.fieldErrors.name}
+          </p>
+        ) : null}
       </p>
       <label>
         <span className="font-bold">Description</span>
-        <textarea defaultValue={task.description} placeholder="Description" name="description" rows={6} />
+        <textarea defaultValue={task.description} placeholder="Description" name="description" rows={6}
+          aria-invalid={Boolean(actionData?.fieldErrors?.description)}
+          aria-errormessage={
+            actionData?.fieldErrors?.description ? "description-error" : undefined
+          }
+        />
+        {actionData?.fieldErrors?.description ? (
+          <p
+            className="form-validation-error text-red-500"
+            role="alert"
+            id="description-error"
+          >
+            {actionData.fieldErrors.description}
+          </p>
+        ) : null}
       </label>
       <label className="font-bold flex items-center">
         <span>Completed</span>

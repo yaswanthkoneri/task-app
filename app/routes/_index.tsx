@@ -39,7 +39,7 @@ export const action: ActionFunction = async ({ request }) => {
     return {
       fieldErrors,
       fields,
-      formError: "Invalid username or password",
+      formError: null,
     };
   }
   const updates = Object.fromEntries(formData);
@@ -58,7 +58,6 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Index() {
   const navigate = useNavigate();
   const actionData = useActionData<typeof action>();
-  console.log(actionData)
 
   return (
     <body className="bg-gray-100 flex items-center justify-center h-screen">
