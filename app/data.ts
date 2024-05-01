@@ -1,7 +1,7 @@
 import sortBy from "sort-by";
 import invariant from "tiny-invariant";
 import { sessionIdSessionStorage } from "./session.server";
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = 'http://13.201.22.37:8000'
 
 type ContactMutation = {
   id?: string;
