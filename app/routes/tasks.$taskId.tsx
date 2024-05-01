@@ -31,24 +31,12 @@ export default function task() {
           ) : (
             <i>No Name</i>
           )}{" "}
-          {/* <Favorite task={task} /> */}
         </h1>
-
-        {/* {task.twitter ? (
-          <p>
-            <a href={`https://twitter.com/${task.twitter}`}>
-              {task.twitter}
-            </a>
-          </p>
-        ) : null} */}
-
         {task.description ? <p>{task.description}</p> : null}
-
         <div>
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
-
           <Form
             action="destroy"
             method="post"

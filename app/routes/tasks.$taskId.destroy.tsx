@@ -10,11 +10,9 @@ export const action = async ({ request, params }: ActionArgs) => {
     invariant(params.taskId, "Missing taskId param");
     const token = await getJWTToken(request)
     let task = await deleteTask(params.taskId, token);
-    console.log(task)
     return redirect("/tasks");
   } catch (err) {
     console.error(err)
     return null;
   }
-
 };

@@ -11,7 +11,6 @@ export const action = async ({ params, request }: ActionArgs) => {
   const formData = await request.formData();
   const completed = formData.get("completed") === "on";
   const updates = { ...Object.fromEntries(formData), completed: completed };
-  console.log(updates, params.taskId)
   const token = await getJWTToken(request)
   await updateTask(params.taskId, updates, token);
   return redirect(`/tasks/${params.taskId}`);

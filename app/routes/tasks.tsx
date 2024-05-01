@@ -20,7 +20,6 @@ import { getTasks, getJWTToken } from "../data";
 import { sessionIdSessionStorage } from "~/session.server";
 
 export const action = async () => {
-    // const task = await createEmptytask();
     return redirect(`/tasks/new`);
 };
 
@@ -104,7 +103,7 @@ export default function tasks() {
                                             className={({ isActive, isPending }) =>
                                                 isActive ? "active" : isPending ? "pending" : ""
                                             }
-                                            to={`/tasks/${task.id}`} // Adjusted the URL here
+                                            to={`/tasks/${task.id}`}
                                         >
                                             {task.name ? (
                                                 <>
@@ -114,7 +113,6 @@ export default function tasks() {
                                             ) : (
                                                 <i>No Name</i>
                                             )}{" "}
-                                            {/* {task.favorite ? <span>★</span> : null} */}
                                         </NavLink>
                                     </li>
                                 ))}

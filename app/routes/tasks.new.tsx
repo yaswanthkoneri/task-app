@@ -1,9 +1,8 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useNavigate } from "@remix-run/react";
-import invariant from "tiny-invariant";
+import type { ActionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { Form, useNavigate } from "@remix-run/react";
 
-import { getTask, createTask, getJWTToken } from "../data";
+import { createTask, getJWTToken } from "../data";
 
 export const action = async ({ request }: ActionArgs) => {
     const formData = await request.formData();
@@ -13,19 +12,8 @@ export const action = async ({ request }: ActionArgs) => {
     return redirect(`/tasks/${result.id}`);
 };
 
-export const loader = async ({ params }: LoaderArgs) => {
-    // invariant(params.taskId, "Missing taskId param");
-    // const task = await getTask(params.taskId);
-    // if (!task) {
-    //     throw new Response("Not Found", { status: 404 });
-    // }
-    return json({});
-};
-
-export default function Edittask() {
-    const { task } = useLoaderData<typeof loader>();
+export default function CreateTask() {
     const navigate = useNavigate();
-
     return (
         <Form id="task-form" method="post">
             <p>
