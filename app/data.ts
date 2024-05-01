@@ -3,17 +3,16 @@ import invariant from "tiny-invariant";
 import { sessionIdSessionStorage } from "./session.server";
 const BASE_URL = 'http://localhost:8000'
 
-type ContactMutation = {
+type TaskMutation = {
   id?: string;
-  first?: string;
-  last?: string;
-  avatar?: string;
-  twitter?: string;
-  notes?: string;
-  favorite?: boolean;
+  name: string;
+  description:string;
+  completed: boolean;
+  created_at?: string;
+  updated_at?: string;
 };
 
-export type ContactRecord = ContactMutation & {
+export type ContactRecord = TaskMutation & {
   id: string;
   name: string;
   completed: boolean;
@@ -52,7 +51,7 @@ const fakeContacts = {
     return fakeContacts.records[id] || null;
   },
 
-  async set(id: string, values: ContactMutation): Promise<ContactRecord> {
+  async set(id: string, values: TaskMutation): Promise<ContactRecord> {
     const contact = await fakeContacts.get(id);
     invariant(contact, `No contact found for ${id}`);
     const updatedContact = { ...contact, ...values };
@@ -113,7 +112,7 @@ export async function getContact(id: string, token: string) {
   return data;
 }
 
-export async function updateContact(id: string, updates: ContactMutation, token: string) {
+export async function updateContact(id: string, updates: TaskMutation, token: string) {
   // const contact = await fakeContacts.get(id);
   // if (!contact) {
   //   throw new Error(`No contact found for ${id}`);
@@ -134,7 +133,7 @@ export async function updateContact(id: string, updates: ContactMutation, token:
   return data;
 }
 
-export async function createContact(updates: ContactMutation, token: string) {
+export async function createContact(updates: TaskMutation, token: string) {
   try {
     const response = await fetch(`${BASE_URL}/tasks/list/`, {
       method: 'POST',
@@ -154,7 +153,7 @@ export async function createContact(updates: ContactMutation, token: string) {
  
 }
 
-export async function login(body: ContactMutation) {
+export async function login(body: TaskMutation) {
   try {
     const response = await fetch(`${BASE_URL}/api/token/`, {
       method: 'POST',
