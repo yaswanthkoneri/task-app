@@ -1,211 +1,92 @@
-import type { ActionFunctionArgs, LinksFunction } from "@remix-run/node";
-import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import type { LinksFunction, LoaderArgs, ActionArgs, ActionFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import {
+    Form,
+    useLoaderData,
+    useNavigate,
+} from "@remix-run/react";
 
-import stylesUrl from "~/styles/login.css";
-
+import appStylesHref from "../app.css";
+import { login } from "~/data";
+import { sessionIdSessionStorage } from '~/session.server';
 export const links: LinksFunction = () => [
-    { rel: "stylesheet", href: stylesUrl },
+    { rel: "stylesheet", href: appStylesHref },
 ];
 
-function validateUsername(username: string) {
-    if (username.length < 3) {
-        return "Usernames must be at least 3 characters long";
-    }
-}
+// export const action = async ({ request }: ActionArgs) => {
+//     const formData = await request.formData();
+//     const updates = Object.fromEntries(formData);
+//     let result = await login(updates);
+//     console.log(result)
+//     localStorage.setItem('token', result.access)
+//     return redirect(`/contacts/`);
+// };
 
-function validatePassword(password: string) {
-    if (password.length < 6) {
-        return "Passwords must be at least 6 characters long";
-    }
-}
 
-function validateUrl(url: string) {
-    const urls = ["/jokes", "/", "https://remix.run"];
-    if (urls.includes(url)) {
-        return url;
-    }
-    return "/jokes";
-}
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-    const form = await request.formData();
-    const loginType = form.get("loginType");
-    const password = form.get("password");
-    const username = form.get("username");
-    const redirectTo = validateUrl(
-        (form.get("redirectTo") as string) || "/jokes"
-    );
-    if (
-        typeof loginType !== "string" ||
-        typeof password !== "string" ||
-        typeof username !== "string"
-    ) {
-        return {
-            fieldErrors: null,
-            fields: null,
-            formError: "Form not submitted correctly.",
-        };
-    }
+export const action: ActionFunction = async ({ request }) => {
+    const formData = await request.formData();
+    const updates = Object.fromEntries(formData);
+    let result = await login(updates);
+    const jwtToken = result.access
+    console.log("jwtToken", result)
+    const sessionIdSession = await sessionIdSessionStorage.getSession(request.headers.get('Cookie'));
+    sessionIdSession.set('jwtToken', jwtToken);
 
-    const fields = { loginType, password, username };
-    const fieldErrors = {
-        password: validatePassword(password),
-        username: validateUsername(username),
-    };
-    if (Object.values(fieldErrors).some(Boolean)) {
-        return {
-            fieldErrors,
-            fields,
-            formError: null,
-        };
-    }
+    const serializedSession = await sessionIdSessionStorage.commitSession(sessionIdSession, {
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+    });
 
-    switch (loginType) {
-        case "login": {
-            // login to get the user
-            // if there's no user, return the fields and a formError
-            // if there is a user, create their session and redirect to /jokes
-            // api call for login
-            console.log("login", fields);
-            //      const user = await login({ username, password });
-
-            return {
-                fieldErrors: null,
-                fields,
-                formError: "Not implemented",
-            };
+    return redirect('/contacts', {
+        headers: {
+            'Set-Cookie': serializedSession,
         }
-        case "register": {
-            // api call for registration
-            const userExists = { username };
-            if (userExists) {
-                return {
-                    fieldErrors: null,
-                    fields,
-                    formError: `User with username ${username} already exists`,
-                };
-            }
-            // create the user
-            // create their session and redirect to /jokes
-            return {
-                fieldErrors: null,
-                fields,
-                formError: "Not implemented",
-            };
-        }
-        default: {
-            return {
-                fieldErrors: null,
-                fields,
-                formError: "Login type invalid",
-            };
-        }
-    }
+    });
+};
+
+
+export const loader = async ({ params }: LoaderArgs) => {
+    return json({});
 };
 
 export default function Login() {
-    const actionData = useActionData<typeof action>();
-    const [searchParams] = useSearchParams();
+    const { contact } = useLoaderData<typeof loader>();
+    const navigate = useNavigate();
+
     return (
-        <div className="container">
-            <div className="content" data-light="">
-                <h1>Login</h1>
-                <form method="post">
-                    <input
-                        type="hidden"
-                        name="redirectTo"
-                        value={searchParams.get("redirectTo") ?? undefined}
-                    />
-                    <fieldset>
-                        <legend className="sr-only">Login or Register?</legend>
-                        <label>
+
+        <body>
+            <div className="card-container">
+                <div className="card">
+                    <Form id="contact-form" method="post">
+                        <p>
+                            <span>Username</span>
                             <input
-                                type="radio"
-                                name="loginType"
-                                value="login"
-                                defaultChecked={
-                                    !actionData?.fields?.loginType ||
-                                    actionData?.fields?.loginType === "login"
-                                }
-                            />{" "}
-                            Login
-                        </label>
-                        <label>
+                                aria-label="username"
+                                name="username"
+                                type="text"
+                                placeholder="Username"
+                            />
+                        </p>
+                        <p>
+                            <span>Password</span>
                             <input
-                                type="radio"
-                                name="loginType"
-                                value="register"
-                                defaultChecked={actionData?.fields?.loginType === "register"}
-                            />{" "}
-                            Register
-                        </label>
-                    </fieldset>
-                    <div>
-                        <label htmlFor="username-input">Username</label>
-                        <input
-                            type="text"
-                            id="username-input"
-                            name="username"
-                            defaultValue={actionData?.fields?.username}
-                            aria-invalid={Boolean(actionData?.fieldErrors?.username)}
-                            aria-errormessage={
-                                actionData?.fieldErrors?.username ? "username-error" : undefined
-                            }
-                        />
-                        {actionData?.fieldErrors?.username ? (
-                            <p
-                                className="form-validation-error"
-                                role="alert"
-                                id="username-error"
-                            >
-                                {actionData.fieldErrors.username}
-                            </p>
-                        ) : null}
-                    </div>
-                    <div>
-                        <label htmlFor="password-input">Password</label>
-                        <input
-                            id="password-input"
-                            name="password"
-                            type="password"
-                            defaultValue={actionData?.fields?.password}
-                            aria-invalid={Boolean(actionData?.fieldErrors?.password)}
-                            aria-errormessage={
-                                actionData?.fieldErrors?.password ? "password-error" : undefined
-                            }
-                        />
-                        {actionData?.fieldErrors?.password ? (
-                            <p
-                                className="form-validation-error"
-                                role="alert"
-                                id="password-error"
-                            >
-                                {actionData.fieldErrors.password}
-                            </p>
-                        ) : null}
-                    </div>
-                    <div id="form-error-message">
-                        {actionData?.formError ? (
-                            <p className="form-validation-error" role="alert">
-                                {actionData.formError}
-                            </p>
-                        ) : null}
-                    </div>
-                    <button type="submit" className="button">
-                        Submit
-                    </button>
-                </form>
+                                aria-label="password"
+                                name="password"
+                                type="password"
+                                placeholder="password"
+                            />
+                        </p>
+                        <p>
+                            <button type="submit">Login</button>
+                            <button onClick={() => navigate(-1)} type="button">
+                                Cancel
+                            </button>
+                        </p>
+                    </Form>
+                </div>
             </div>
-            <div className="links">
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/jokes">Jokes</Link>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        </body>
     );
 }

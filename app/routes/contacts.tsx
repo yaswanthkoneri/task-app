@@ -16,7 +16,8 @@ import {
 import { useEffect } from "react";
 
 import appStylesHref from "../app.css";
-import { createEmptyContact, getContacts } from "../data";
+import { createEmptyContact, getContacts, getJWTToken } from "../data";
+import { sessionIdSessionStorage } from "~/session.server";
 
 export const action = async () => {
     // const contact = await createEmptyContact();
@@ -30,7 +31,8 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderArgs) => {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
-    const contacts = await getContacts(q);
+    const token = await getJWTToken(request)
+    const contacts = await getContacts(q, token);
     return json({ contacts, q });
 };
 
@@ -59,7 +61,7 @@ export default function Contacts() {
             </head>
             <body>
                 <div id="sidebar">
-                    <h1>Remix Contacts</h1>
+                    <h1>Remix Tasks</h1>
                     <div>
                         <Form
                             id="search-form"
