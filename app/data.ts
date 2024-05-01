@@ -24,7 +24,7 @@ export type TaskRecord = TaskMutation & {
 ////////////////////////////////////////////////////////////////////////////////
 // This is just a fake DB table. In a real app you'd be talking to a real db or
 // fetching from an existing API.
-const fakeContacts = {
+const fakeTasks = {
   records: {} as Record<string, TaskRecord>,
 
   async getAll(token: string): Promise<TaskRecord[]> {
@@ -48,14 +48,14 @@ const fakeContacts = {
   },
 
   async get(id: string): Promise<TaskRecord | null> {
-    return fakeContacts.records[id] || null;
+    return fakeTasks.records[id] || null;
   },
 
   async set(id: string, values: TaskMutation): Promise<TaskRecord> {
-    const contact = await fakeContacts.get(id);
+    const contact = await fakeTasks.get(id);
     invariant(contact, `No contact found for ${id}`);
     const updatedContact = { ...contact, ...values };
-    fakeContacts.records[id] = updatedContact;
+    fakeTasks.records[id] = updatedContact;
     return updatedContact;
   }
 };
@@ -84,10 +84,10 @@ export async function getContacts(query?: string | null, token?: string) {
   try {
     let contacts
     if (query) {
-      contacts = await fakeContacts.getAllSearch(query, token);
+      contacts = await fakeTasks.getAllSearch(query, token);
       return contacts || []
     }
-    contacts = await fakeContacts.getAll(token) || [];
+    contacts = await fakeTasks.getAll(token) || [];
 
     // console.log("contacts", contacts)
     if (contacts.code === 'token_not_valid') {
@@ -113,11 +113,11 @@ export async function getContact(id: string, token: string) {
 }
 
 export async function updateContact(id: string, updates: TaskMutation, token: string) {
-  // const contact = await fakeContacts.get(id);
+  // const contact = await fakeTasks.get(id);
   // if (!contact) {
   //   throw new Error(`No contact found for ${id}`);
   // }
-  // await fakeContacts.set(id, { ...contact, ...updates });
+  // await fakeTasks.set(id, { ...contact, ...updates });
   // return contact;
 
 
