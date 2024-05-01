@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
   const jwtToken = result.access
   let serializedSession = await setSession(request, jwtToken);
 
-  return redirect('/contacts', {
+  return redirect('/tasks', {
     headers: {
       'Set-Cookie': serializedSession,
     }

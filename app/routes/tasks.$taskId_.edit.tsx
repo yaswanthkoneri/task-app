@@ -7,30 +7,30 @@ import { getTask, getJWTToken, updateTask } from "../data";
 import { useState } from "react";
 
 export const action = async ({ params, request }: ActionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
+  invariant(params.taskId, "Missing taskId param");
   const formData = await request.formData();
   const completed = formData.get("completed") === "on";
   const updates = { ...Object.fromEntries(formData), completed: completed };
-  console.log(updates, params.contactId)
+  console.log(updates, params.taskId)
   const token = await getJWTToken(request)
-  await updateTask(params.contactId, updates, token);
-  return redirect(`/contacts/${params.contactId}`);
+  await updateTask(params.taskId, updates, token);
+  return redirect(`/tasks/${params.taskId}`);
 };
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  invariant(params.contactId, "Missing contactId param");
+  invariant(params.taskId, "Missing taskId param");
   const token = await getJWTToken(request)
-  const contact = await getTask(params.contactId, token);
-  if (!contact) {
+  const task = await getTask(params.taskId, token);
+  if (!task) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ contact });
+  return json({ task });
 };
 
-export default function EditContact() {
-  const { contact } = useLoaderData<typeof loader>();
+export default function Edittask() {
+  const { task } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const [completed, setCompleted] = useState(contact.completed);
+  const [completed, setCompleted] = useState(task.completed);
 
   const handleCheckboxChange = (event: any) => {
     setCompleted(event.target.checked);
@@ -41,7 +41,7 @@ export default function EditContact() {
       <p>
         <span>Name</span>
         <input
-          defaultValue={contact.name}
+          defaultValue={task.name}
           aria-label="name"
           name="name"
           type="text"
@@ -50,7 +50,7 @@ export default function EditContact() {
       </p>
       <label>
         <span>Description</span>
-        <textarea defaultValue={contact.description} name="description" rows={6} />
+        <textarea defaultValue={task.description} name="description" rows={6} />
       </label>
       <label>
         <input

@@ -7,42 +7,42 @@ import type { TaskRecord } from "../data";
 import { getTask, getJWTToken, updateTask } from "../data";
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  invariant(params.contactId, "Missing contactId param");
+  invariant(params.taskId, "Missing taskId param");
   const token = await getJWTToken(request)
-  const contact = await getTask(params.contactId, token);
-  if (!contact) {
+  const task = await getTask(params.taskId, token);
+  if (!task) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ contact });
+  return json({ task });
 };
 
-export default function Contact() {
-  const { contact } = useLoaderData<typeof loader>();
+export default function task() {
+  const { task } = useLoaderData<typeof loader>();
 
   return (
-    <div id="contact">
+    <div id="task">
       <div>
         <h1>
-          {contact.name ? (
+          {task.name ? (
             <>
-              {contact.name}
-              {contact.completed && "✅"}
+              {task.name}
+              {task.completed && "✅"}
             </>
           ) : (
             <i>No Name</i>
           )}{" "}
-          {/* <Favorite contact={contact} /> */}
+          {/* <Favorite task={task} /> */}
         </h1>
 
-        {/* {contact.twitter ? (
+        {/* {task.twitter ? (
           <p>
-            <a href={`https://twitter.com/${contact.twitter}`}>
-              {contact.twitter}
+            <a href={`https://twitter.com/${task.twitter}`}>
+              {task.twitter}
             </a>
           </p>
         ) : null} */}
 
-        {contact.description ? <p>{contact.description}</p> : null}
+        {task.description ? <p>{task.description}</p> : null}
 
         <div>
           <Form action="edit">

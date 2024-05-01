@@ -1,5 +1,4 @@
 import sortBy from "sort-by";
-import invariant from "tiny-invariant";
 import { sessionIdSessionStorage } from "./session.server";
 const BASE_URL = 'http://localhost:8000'
 
@@ -72,19 +71,18 @@ export const setSession = async (request: any, jwtToken: string) => {
 export async function getTasks(query?: string | null, token?: string) {
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
-    let contacts
+    let tasks
     if (query) {
-      contacts = await TaskApi.getAllSearch(query, token);
-      return contacts || []
+      tasks = await TaskApi.getAllSearch(query, token);
+      return tasks || []
     }
-    contacts = await TaskApi.getAll(token) || [];
+    tasks = await TaskApi.getAll(token) || [];
 
-    // console.log("contacts", contacts)
-    if (contacts.code === 'token_not_valid') {
+    if (tasks.code === 'token_not_valid') {
       return 401
     }
   
-    return contacts?.sort(sortBy("name", "created_at"));
+    return tasks?.sort(sortBy("name", "created_at"));
   } catch (err) {
     console.error(err)
     return err

@@ -20,8 +20,8 @@ import { getTasks, getJWTToken } from "../data";
 import { sessionIdSessionStorage } from "~/session.server";
 
 export const action = async () => {
-    // const contact = await createEmptyContact();
-    return redirect(`/contacts/new`);
+    // const task = await createEmptytask();
+    return redirect(`/tasks/new`);
 };
 
 export const links: LinksFunction = () => [
@@ -32,15 +32,15 @@ export const loader = async ({ request }: LoaderArgs) => {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
     const token = await getJWTToken(request)
-    const contacts = await getTasks(q, token);
-    if (contacts === 401) {
+    const tasks = await getTasks(q, token);
+    if (tasks === 401) {
         return redirect('/')
     }
-    return json({ contacts, q });
+    return json({ tasks, q });
 };
 
-export default function Contacts() {
-    const { contacts, q } = useLoaderData<typeof loader>();
+export default function tasks() {
+    const { tasks, q } = useLoaderData<typeof loader>();
     const navigation = useNavigation();
     const submit = useSubmit();
     const searching =
@@ -81,7 +81,7 @@ export default function Contacts() {
                             role="search"
                         >
                             <input
-                                aria-label="Search contacts"
+                                aria-label="Search tasks"
                                 className={searching ? "loading" : ""}
                                 defaultValue={q || ""}
                                 id="q"
@@ -96,32 +96,32 @@ export default function Contacts() {
                         </Form>
                     </div>
                     <nav>
-                        {contacts?.length ? (
+                        {tasks?.length ? (
                             <ul>
-                                {contacts.map((contact) => (
-                                    <li key={contact.id}>
+                                {tasks.map((task) => (
+                                    <li key={task.id}>
                                         <NavLink
                                             className={({ isActive, isPending }) =>
                                                 isActive ? "active" : isPending ? "pending" : ""
                                             }
-                                            to={`/contacts/${contact.id}`} // Adjusted the URL here
+                                            to={`/tasks/${task.id}`} // Adjusted the URL here
                                         >
-                                            {contact.name ? (
+                                            {task.name ? (
                                                 <>
-                                                    {contact.name}
-                                                    {contact.completed && "✅"}
+                                                    {task.name}
+                                                    {task.completed && "✅"}
                                                 </>
                                             ) : (
                                                 <i>No Name</i>
                                             )}{" "}
-                                            {/* {contact.favorite ? <span>★</span> : null} */}
+                                            {/* {task.favorite ? <span>★</span> : null} */}
                                         </NavLink>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
                             <p>
-                                <i>No contacts</i>
+                                <i>No tasks</i>
                             </p>
                         )}
                     </nav>

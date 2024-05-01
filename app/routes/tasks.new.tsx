@@ -10,20 +10,20 @@ export const action = async ({ request }: ActionArgs) => {
     const updates = Object.fromEntries(formData);
     const token = await getJWTToken(request)
     let result = await createTask(updates, token);
-    return redirect(`/contacts/${result.id}`);
+    return redirect(`/tasks/${result.id}`);
 };
 
 export const loader = async ({ params }: LoaderArgs) => {
-    // invariant(params.contactId, "Missing contactId param");
-    // const contact = await getTask(params.contactId);
-    // if (!contact) {
+    // invariant(params.taskId, "Missing taskId param");
+    // const task = await getTask(params.taskId);
+    // if (!task) {
     //     throw new Response("Not Found", { status: 404 });
     // }
     return json({});
 };
 
-export default function EditContact() {
-    const { contact } = useLoaderData<typeof loader>();
+export default function Edittask() {
+    const { task } = useLoaderData<typeof loader>();
     const navigate = useNavigate();
 
     return (

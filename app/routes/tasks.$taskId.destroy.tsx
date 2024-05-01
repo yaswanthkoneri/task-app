@@ -6,12 +6,12 @@ import { deleteTask, getJWTToken } from "../data";
 
 export const action = async ({ request, params }: ActionArgs) => {
   try {
-    console.log("inside action", params.contactId)
-    invariant(params.contactId, "Missing contactId param");
+    console.log("inside action", params.taskId)
+    invariant(params.taskId, "Missing taskId param");
     const token = await getJWTToken(request)
-    let contact = await deleteTask(params.contactId, token);
-    console.log(contact)
-    return redirect("/contacts");
+    let task = await deleteTask(params.taskId, token);
+    console.log(task)
+    return redirect("/tasks");
   } catch (err) {
     console.error(err)
     return null;
