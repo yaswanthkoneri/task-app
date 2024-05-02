@@ -35,7 +35,12 @@ export const action = async ({ request }: ActionArgs) => {
     const updates = Object.fromEntries(formData);
     const token = await getJWTToken(request)
     let result = await createTask(updates, token);
-    return redirect(`/tasks/${result.id}`);
+    if (result.id) {
+        return redirect(`/tasks/${result.id}`);
+    } else {
+        console.log(JSON.stringify(result))
+        return null
+    }
 };
 
 export default function CreateTask() {
